@@ -1,0 +1,101 @@
+1.
+select * from customers;
+
+2.
+select distinct(country) from customers;
+
+3.
+select * from customers
+where customer_id like 'BL%';
+
+4.
+select * from orders
+limit 100;
+
+5.
+select * from customers
+where postal_code in ('1010', '3012', '12209', '05023');
+
+6.
+select * from orders
+where ship_region is not null;
+
+7.
+select * from customers
+order by country, city;
+
+8.
+insert into customers values
+('TEXAS', 'University of Texas', 'Riley Sample', 'Sales Representative', '123 Austin Str.', 'Austin', null, 78750, 'USA', '(512) 123-456', null);
+
+9.
+update orders
+set ship_region = 'EuroZone'
+where ship_country = 'France';
+
+10.
+delete from order_details
+where quantity = 1;
+
+11.
+select avg(quantity), max(quantity), min(quantity) from order_details;
+
+12.
+select avg(quantity), max(quantity), min(quantity) 
+from order_details group by order_id;
+
+13.
+select customer_id from orders
+where order_id = 10290;
+
+14.
+select * from orders
+inner join customers
+on orders.customer_id = customers.customer_id;
+
+select * from orders
+left join customers
+on orders.customer_id = customers.customer_id;
+
+select * from orders
+right join customers
+on orders.customer_id = customers.customer_id;
+
+15.
+select ship_city, ship_country 
+from orders as o
+join employees as e
+on o.employee_id = e.employee_id;
+
+16.
+select ship_name
+from orders as o
+join order_details as od
+on o.order_id = od.order_id
+join products as p
+on p.product_id = od.product_id
+where discontinued = 1;
+
+17.
+select first_name from employees
+where reports_to is null;
+
+18.
+select *
+from employees e1
+join employees e2
+on e1.reports_to = e2.employee_id
+where e2.first_name = 'Andrew';
+
+19.
+create index customer_id_index
+on orders(customer_id);
+
+
+
+
+
+
+
+
+
