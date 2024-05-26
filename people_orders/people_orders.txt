@@ -20,7 +20,11 @@ Expected Result: Nicholas Hunter 17, Kenneth Burns 18, Kathy Hayes 19, Edward Ha
 
 Average number of children
 Expected Result: 2.34
-
+db.people.aggregate([	
+			{$addFields: {num_children: {$size: '$children'}}},
+			{$group: {_id: null, avg_children: {$avg: '$num_children'}}},
+			{$project: {avg_children: 1, _id: 0}}
+			])
 
 Name and age of children in Michigan who are under age ten
 Expected Result: Adam 0, Janice 1, Judith 3, Beverly 4, Antonio 6, Jeremy 7
@@ -38,35 +42,36 @@ db.orders.aggregate([ {$group: {_id: 'null', total_sales: {$sum: '$total'}}}])
 Find the total dollar amount of sales on 2017-05-22. Use the total field.
 Expected Result: 271.2
 db.orders.aggregate([ 
-					{$match: {date: '2017-05-22'}},
-					{$group: {_id: '$date', total_sales: {$sum: '$total'}}}
-					])
+			{$match: {date: '2017-05-22'}},
+			{$group: {_id: '$date', total_sales: {$sum: '$total'}}}
+			])
 
 
 Find the date with the greatest number of orders. Include the date and the number of orders.
 Expected Result: 2017-05-04 3
 db.orders.aggregate([ 
-					{$match: {date: '2017-05-04'}},
-					{$group: {_id: '$date', total_sales: {$sum: 1}}}
-					])
+			{$match: {date: '2017-05-04'}},
+			{$group: {_id: '$date', total_sales: {$sum: 1}}}	
+			])
 
 
 Find the date with the greatest total sales. Include the date and the dollar amount for that day.
 Expected Result: 2017-05-22 $271.2
 db.orders.aggregate([
-					{$group: {_id: '$date', total_sales: {$sum: '$total'}}},
-					{$sort: {total_sales: -1}},
-					{$limit: 1}
-					])
+			{$group: {_id: '$date', total_sales: {$sum: '$total'}}},
+			{$sort: {total_sales: -1}},
+			{$limit: 1}
+			]);
 
 
 Find the top three products that have had the greatest number sold. Include product name and number sold.
 Expected Result: Pine Nuts 13, Cheese 8, Top Hat 5
 db.orders.aggregate([
-					{$group: {_id: '$items.product', total_sold: {$sum: 1}}},
-					{$sort: {total_sales: -1}},
-					{$limit: 3}
-					])
+			{$unwind: '$items'},
+			{$group: {_id: '$items.product', total_sold: {$sum: '$items.count'}}},
+			{$sort: {total_sold: -1}},
+			{$limit: 3}
+			]);
 
 
 Find the top item that has the greatest revenue (number sold * price). Include product name and dollar amount of sales.
